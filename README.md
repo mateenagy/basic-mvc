@@ -16,4 +16,11 @@ Use ```Route::get``` for initialize a route.
 
 Example:
 
-```Route::get('about', 'aboutController@index')```
+```Route::get('api/users', 'aboutController@index')```
+
+### Route wildcard
+
+```Route::get('api/users/{id}')```
+
+For database connection I use Laravel Eloquent model so you can read the documentation about it on the Laravel official site.
+
