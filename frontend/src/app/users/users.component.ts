@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
 import 'rxjs/add/operator/map';
 
 @Component({
@@ -20,7 +21,9 @@ export class UsersComponent implements OnInit {
   private id: number;
   public loading = true;
 
-  constructor(private http: HttpClient, public fb: FormBuilder) {
+  constructor(private http: HttpClient,
+              public fb: FormBuilder,
+              public auth: AuthService) {
     this.rForm = this.fb.group({
       'username': [null, Validators.required],
       'email': [null, Validators.required],

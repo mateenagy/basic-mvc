@@ -1,7 +1,9 @@
 <section class="pb-5">
     <div class="container">
+      <p class="text-center mt-5" *ngIf="!auth.loggedIn">Login for see users</p>
         <p *ngIf="loading" class="text-center">Loading...</p>
-        <table class="table table-responsive" *ngIf="!loading">
+        <p>{{ auth.user.username }}</p>
+        <table class="table table-responsive" *ngIf="!loading && auth.loggedIn">
             <thead class="thead-dark">
               <tr>
                 <th scope="col">#</th>

@@ -8,6 +8,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { UsersComponent } from './users/users.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { AuthService } from './services/auth.service';
 
 const appRoutes: Routes = [
   { path: '', component: UsersComponent },
@@ -32,7 +33,7 @@ const appRoutes: Routes = [
       appRoutes
     )
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

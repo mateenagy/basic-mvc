@@ -3,7 +3,7 @@ class ApiController extends Controller {
 
     public function index() {
         //GET ALL USER
-        $user = User::all();
+        $user = User::select('id','username', 'email', 'full_name', 'access_token')->get();
         header('Content-Type: application/json');
         //PUT USERS IN A JSON
         $json_user = [
@@ -34,18 +34,28 @@ class ApiController extends Controller {
         }
     }
 
-    public function addUser($username = '', $email = '', $full_name = '') {
+    public function addUser($username = '', $email = '', $full_name = '', $password = '') {
+
         // GET RAW POST DATA
         $data = file_get_contents("php://input");
         $request = json_decode($data);
         $username = $request->username;
         $email = $request->email;
         $full_name = $request->full_name;
+        $password = md5($request->password);
+
+        $token1 = substr(base_convert(md5($username), 16,32), 0, 8);
+        $token2 = substr(base_convert(md5(time()), 16,32), 0, 8);
+
+        $access_token = $token1 . '_' . $token2;
+
         //CREATE USER
         User::create([
             'username' => $username,
             'email' => $email,
-            'full_name' => $full_name
+            'full_name' => $full_name,
+            'password' => $password,
+            'access_token' => $access_token
         ]);
     }
 
@@ -74,11 +84,14 @@ class ApiController extends Controller {
     public function logIn($username = '', $token = '') {
         //START SESSION
         session_start();
+
         //GET RAW DATA
         $data = file_get_contents("php://input");
         $request = json_decode($data);
         $username = $request->username;
         $token = $request->token;
+        $password = md5($request->password);
+
         //DECODE TOKEN
         $decoded_token = base64_decode($token);
         $decoded_json = json_decode($decoded_token);
@@ -88,7 +101,13 @@ class ApiController extends Controller {
 
         header('Content-Type: application/json');
         //GET USER
-        $user = User::where('username', $username)->get();
+        $user = User::select('id','username', 'email', 'full_name', 'access_token')
+                    ->where([
+                        ['username','=',$username],
+                        ['password','=',$password]
+                    ])
+                    ->get();
+
         if (sizeof($user) == 0) {
             //ERROR HANDLE
             echo json_encode('user_not_found');
@@ -100,7 +119,7 @@ class ApiController extends Controller {
                 }
             } else {
                 //GENERATE TOKEN
-                $token = $this->generateKey($username);
+                $token = $this->generateKey($user[0]->access_token);
                 $_SESSION['token'] = $token;
 
                 $data = [
@@ -124,13 +143,17 @@ class ApiController extends Controller {
         $decoded_json = json_decode($decoded_token);
         //CHECK TOKEN
         if ($token != null) {
-            $username = $decoded_json->user_name;
+
+            $tokens = $decoded_json->access_token;
+
             $exp = $decoded_json->exp;
             //CHECK VALID TOKEN
             if ($exp < time()) {
                 echo json_encode('not_authorized');
             } else {
-                $user = User::where('username', $username)->get();
+                $user = User::select('id', 'username', 'email', 'full_name', 'access_token')
+                            ->where('access_token', $tokens)
+                            ->get();
                 echo json_encode($user);
             }
         } else {
@@ -139,14 +162,14 @@ class ApiController extends Controller {
 
 
     }
-    public function generateKey($user_name) {
+    public function generateKey($access_token) {
         //SET CREATED AT
         $cat = time();
         //SET EXPIRE DATE
         $exp = $cat + 20;
         //PUT DATA TO JSON
         $data = [
-            'user_name' => $user_name,
+            'access_token' => $access_token,
             'cat' => $cat,
             'exp' => $exp
         ];
