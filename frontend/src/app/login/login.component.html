@@ -1,0 +1,14 @@
+<section>
+  <p class="text-center">{{ error }}</p>
+  <div class="container">
+    <form [formGroup]="rForm" (ngSubmit)="logIn(rForm.value)" class="mt-5" *ngIf="!loggedIn">
+        <div class="form-group">
+            <label for="exampleInputPassword1">Username</label>
+            <input type="text" class="form-control" formControlName="username" id="exampleInputPassword1" placeholder="Username">
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]='!rForm.valid'>Login</button>
+    </form>
+    <h1 *ngIf="loggedIn">Hello {{ user.username }}</h1>
+    <p *ngIf="loggedIn">You are logged in</p>
+  </div>
+</section>

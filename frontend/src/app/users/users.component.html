@@ -1,0 +1,53 @@
+<section class="pb-5">
+    <div class="container">
+        <p *ngIf="loading" class="text-center">Loading...</p>
+        <table class="table table-responsive" *ngIf="!loading">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Username</th>
+                <th scope="col">Full name</th>
+                <th scope="col">Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of users">
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.full_name }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    <div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
+                        <button class="btn btn-secondary dropdown-toggle" id="dropdownManual" ngbDropdownToggle>Options</button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownManual">
+                          <button class="dropdown-item" (click)="deleteUser(user.id)">Delete</button>
+                          <button class="dropdown-item" (click)="edit=true; setEdit(user)">Edit</button>
+                        </div>
+                    </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+  
+      <!-- EDIT -->
+      <form [formGroup]="rForm" (ngSubmit)="editUser(rForm.value)" *ngIf="edit">
+          <div class="form-group">
+              <label for="exampleInputPassword1">Username</label>
+              <input type="text" class="form-control" formControlName="username" id="exampleInputPassword1" placeholder="Username">
+          </div>
+  
+          <div class="form-group">
+              <label for="exampleInputPassword1">Full name</label>
+              <input type="text" class="form-control" formControlName="full_name" id="exampleInputPassword1" placeholder="Full name">
+          </div>
+  
+          <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" formControlName="email" aria-describedby="emailHelp" placeholder="Enter email">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]='!rForm.valid'>Save changes</button>
+          <button type="submit" class="btn btn-primary" (click)="edit=false; setEdit(rForm.value)">Cancel</button>
+      </form>
+    </div>
+  </section>
