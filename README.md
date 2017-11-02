@@ -43,9 +43,14 @@ For database connection I use Laravel Eloquent model so you can read the documen
 The frontend uses Angular 4 with the Angular CLI.
 
 You can generate
+
 -components:
+
 ```ng generate component ComponentName```
+
 -services:
+
 ```ng generate service ServiceName```
+
  For more read the Angular CLI documentation
 
