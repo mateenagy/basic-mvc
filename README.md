@@ -10,6 +10,20 @@ Run ```npm install``` in the frontend folder.
 
 Run ```npm start``` for the server.
 
+### Database config
+app/backend.php:
+
+```
+$capsule->addConnection([
+    'driver'    => 'mysql',
+    'host'      => 'host',
+    'database'  => 'database_name',
+    'username'  => 'root',
+    'password'  => 'root',
+    'charset'   => 'utf8',
+    'prefix'    => '',
+]);
+```
 ### Routing
 
 Use ```Route::get``` for initialize a route.
@@ -23,4 +37,15 @@ Example:
 ```Route::get('api/users/{id}')```
 
 For database connection I use Laravel Eloquent model so you can read the documentation about it on the Laravel official site.
+
+### Frontend
+
+The frontend uses Angular 4 with the Angular CLI.
+
+You can generate
+-components:
+```ng generate component ComponentName```
+-services:
+```ng generate service ServiceName```
+ For more read the Angular CLI documentation
 

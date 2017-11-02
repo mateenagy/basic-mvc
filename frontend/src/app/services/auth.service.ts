@@ -70,4 +70,26 @@ export class AuthService {
     });
   }
 
+  public register(user, form) {
+    return new Promise((resolve, reject) => {
+      const body = {
+        'username': user.username,
+        'email': user.email,
+        'full_name': user.full_name,
+        'password': user.password
+      };
+      this.http.post('/api/addUser', body, {
+        responseType: 'text',
+        headers: new HttpHeaders().set('Content-type', 'application/json')
+      })
+      .subscribe(
+        res => {},
+        error => console.log('Error: ' + error),
+        () => {
+          form.reset();
+        }
+      );
+    });
+  }
+
 }

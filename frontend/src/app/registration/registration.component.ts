@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 import 'rxjs/add/operator/map';
 
 @Component({
@@ -13,7 +14,8 @@ export class RegistrationComponent implements OnInit {
   public rForm: FormGroup;
   constructor(private http: HttpClient,
               public fb: FormBuilder,
-              public router: Router) {
+              public router: Router,
+              public auth: AuthService) {
     this.rForm = this.fb.group({
       'username': [null, Validators.required],
       'email': [null, Validators.required],
@@ -24,26 +26,9 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit() {
   }
-
   public register(user) {
-    const body = {
-        'username': user.username,
-        'email': user.email,
-        'full_name': user.full_name,
-        'password': user.password
-      };
-    this.http.post('/api/addUser', body, {
-      responseType: 'text',
-      headers: new HttpHeaders().set('Content-type', 'application/json')
-    })
-    .subscribe(
-      res => {},
-      error => console.log('Error: ' + error),
-      () => {
-        this.rForm.reset();
-        this.router.navigate(['login']);
-      }
-    );
+    this.auth.register(user, this.rForm);
+    this.router.navigate(['login']);
   }
 
 }
